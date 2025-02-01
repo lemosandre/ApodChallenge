@@ -37,6 +37,17 @@
         }
       }
     },
+    "delete.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
     "end.date" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -110,6 +121,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name:"
+          }
+        }
+      }
+    },
+    "no.saves" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Saves"
           }
         }
       }

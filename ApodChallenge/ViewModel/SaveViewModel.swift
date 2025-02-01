@@ -9,42 +9,30 @@ import Foundation
 import RealmSwift
 
 class SaveViewModel: ObservableObject {
-
-    @ObservedResults(ApodObject.self) var apodLists
-    @Published var apodList: [ApodObject] = []
     @Published var isLoading = true
-
-    private var token: NotificationToken?
-
-    init() {
-        setupObserver()
-    }
-
-    deinit {
-        token?.invalidate()
-    }
     
-    private func setupObserver() {
+    var token: NotificationToken?
+
+    func getApodRealm(
+        callBack: @escaping () -> Void,
+        failure: @escaping (_ error: String) -> Void
+    ) {
         do {
             let realm = try Realm()
             let results = realm.objects(ApodObject.self)
-            print(results)
-            token = results.observe({ [weak self] changes in
-                self?.apodList = results.map(ApodObject.init)
-                    .sorted(by: { $0.date > $1.date })
+            token = results.observe({ changes in
+                print("Changes: \(changes)")
             })
+            callBack()
         } catch let error {
-            print(error.localizedDescription)
+            failure(error.localizedDescription)
         }
     }
-    
-    // Add contact
-    func addApod(apod: ApodObject) {
-        $apodLists.append(apod)
-    }
         
-    // Delete contact
-    func remove(id: String) {
+    func removeApod(
+        id: String,
+        failure: @escaping (_ error: String) -> Void)
+    {
         do {
             let realm = try Realm()
             let objectId = try ObjectId(string: id)
@@ -54,7 +42,7 @@ class SaveViewModel: ObservableObject {
                 }
             }
         } catch let error {
-            print(error)
+            failure(error.localizedDescription)
         }
     }
 }

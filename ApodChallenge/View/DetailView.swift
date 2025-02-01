@@ -23,11 +23,10 @@ struct YouTubeView: UIViewRepresentable {
 struct DetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel = DetailViewModel()
-    @State private var viewModelSave = SaveViewModel()
     @State var date: String
     @State var errorMessage = ""
     @State var isShowAlert = false
-    
+
     var body: some View {
         VStack {
             ZStack {
@@ -53,7 +52,7 @@ struct DetailView: View {
                     Button(action: {
                         addApod()
                     }) {
-                        Image(systemName: "bookmark")
+                        Image(systemName: viewModel.isSaved ? "bookmark.fill" : "bookmark")
                             .font(.title)
                             .foregroundColor(.black)
                     }
@@ -112,6 +111,7 @@ struct DetailView: View {
     }
     
     func callApi() {
+        viewModel.checkApodSave(date: self.date)
         viewModel.getApodDate(
             date: self.date,
             callBack: {
@@ -123,17 +123,33 @@ struct DetailView: View {
     }
     
     func addApod() {
-        print("Save")
-        let apod = ApodObject()
-        apod.title = viewModel.apod.title
-        apod.date = viewModel.apod.date
-        apod.explanationone = viewModel.apod.explanation ?? ""
-        apod.hdurl = viewModel.apod.hdurl ?? ""
-        apod.mediaType = viewModel.apod.mediaType ?? ""
-        apod.serviceVersion = viewModel.apod.serviceVersion ?? ""
-        apod.url = viewModel.apod.url ?? ""
-        apod.copyright = viewModel.apod.copyright ?? ""
-        viewModelSave.addApod(apod: apod)
+        if viewModel.isSaved {
+            viewModel.removeApod(
+                date: viewModel.apod.date,
+                callBack: {
+                    viewModel.isSaved.toggle()
+                }, failure: { error in
+                    self.isShowAlert = true
+                    self.errorMessage = error
+                }
+            )
+        } else {
+            let apod = ApodObject()
+            apod.title = viewModel.apod.title
+            apod.date = viewModel.apod.date
+            apod.explanationone = viewModel.apod.explanation ?? ""
+            apod.hdurl = viewModel.apod.hdurl ?? ""
+            apod.mediaType = viewModel.apod.mediaType ?? ""
+            apod.serviceVersion = viewModel.apod.serviceVersion ?? ""
+            apod.url = viewModel.apod.url ?? ""
+            apod.copyright = viewModel.apod.copyright ?? ""
+            viewModel.addApod(apod: apod, callBack: {
+                viewModel.isSaved.toggle()
+            }, failure: { error in
+                self.isShowAlert = true
+                self.errorMessage = error
+            })
+        }
     }
 }
 

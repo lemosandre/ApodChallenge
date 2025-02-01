@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct SaveView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -13,6 +14,7 @@ struct SaveView: View {
     @State var isShowAlert = false
     @State var errorMessage = ""
     @State var isAppear = false
+    @ObservedResults(ApodObject.self) var apodList
 
     var body: some View {
         NavigationView{
@@ -35,28 +37,18 @@ struct SaveView: View {
                             .foregroundColor(.black)
                             .accessibilityIdentifier("title.detail")
                     }
-                    HStack{
-                        Spacer()
-                        Button(action: {
-//                            addApod()
-                        }) {
-                            Image(systemName: "bookmark")
-                                .font(.title)
-                                .foregroundColor(.black)
-                        }
-                    }
                 }
+                .padding(.horizontal, 10)
                 Divider()
-                if viewModel.isLoading {
-                    ProgressView {
-                        Text("loading")
-                            .foregroundColor(.pink)
-                            .bold()
-                            .accessibilityIdentifier("loading")
-                    }
+                if apodList.isEmpty {
+                    Text("no.saves")
+                        .foregroundColor(.pink)
+                        .bold()
+                        .accessibilityIdentifier("no.saves")
+                    Spacer()
                 } else {
                     List {
-                        ForEach(viewModel.apodList, id: \.date) { item in
+                        ForEach(apodList, id: \.date) { item in
                             NavigationLink(destination: DetailView(date: item.date)) {
                                 HStack {
                                     if item.mediaType == "video" {
@@ -109,15 +101,56 @@ struct SaveView: View {
                             )
                             .listRowSeparator(.hidden)
                             .accessibilityIdentifier("DetailViewButton")
+                            Button(action:{ self.deleteData(id: "\(item.id)") }) {
+                                Text("delete.button")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.red)
+                            .padding(.horizontal, 10)
                         }
                     }
+                    .padding(.horizontal, 10)
                     .listStyle(.plain)
                 }
             }
-            .navigationBarHidden(true)
-            .padding(.vertical, 10)
-            .padding(.horizontal, 20)
-        }.navigationViewStyle(.stack)
+            .onAppear {
+                if !self.isAppear {
+                    self.isAppear = true
+                    callData()
+                }
+            }
+            .alert(isPresented: $isShowAlert, content: {
+                Alert(
+                    title: Text("warning.network.connection"),
+                    message: Text(errorMessage))
+            })
+        }
+        .navigationViewStyle(.stack)
+        .navigationBarHidden(true)
+
+        
+    }
+    
+    func callData() {
+        viewModel.isLoading = true
+        viewModel.getApodRealm(
+            callBack: {
+                viewModel.isLoading = false
+            },
+            failure: { error in
+                errorMessage = error
+                self.isShowAlert = true
+            })
+    }
+    
+    func deleteData(id: String) {
+        viewModel.removeApod(
+            id: id,
+            failure: { error in
+                errorMessage = error
+                self.isShowAlert = true
+            })
     }
 }
 

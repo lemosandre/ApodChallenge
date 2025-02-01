@@ -9,28 +9,47 @@ import XCTest
 
 final class ApodChallengeUITests: XCTestCase {
 
+    var app: XCUIApplication!
+
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        app = XCUIApplication()
+        app.launch()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        app = nil
     }
 
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testHomeTitleDisplay() { //Checks if the title is being presented
+
+        let homeTitleText = app.staticTexts["title.home"]
+            
+        // Check if the title text is visible
+        XCTAssertTrue(homeTitleText.exists)
     }
+    
+    func testLoadingDisplay() {
+        
+        let loadingText = app.staticTexts["loading"]
+        
+        // Check if the loading text is invisible
+        XCTAssertFalse(loadingText.waitForExistence(timeout: 15))
 
+    }
+    
+    func testNavigationToDetailView() {
+        //Executes the action of tapping the button
+        let detailButton = app.buttons["DetailViewButton"]
+        XCTAssertTrue(detailButton.exists)
+        detailButton.firstMatch.tap()
+
+        // Checks if you've navigated to the DetailView
+        let aboutUsViewTitle = app.staticTexts["title.detail"]
+        XCTAssertTrue(aboutUsViewTitle.waitForExistence(timeout: 5))
+    }
+    
     @MainActor
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
