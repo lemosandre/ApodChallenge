@@ -10,7 +10,6 @@
 		5E8479D02D4D1F8800D22C95 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5E8479CF2D4D1F8800D22C95 /* RealmSwift */; };
 		5E8479D12D4D1F8800D22C95 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 5E8479CF2D4D1F8800D22C95 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		5E8479D72D4D268100D22C95 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 5E8479D62D4D268100D22C95 /* Alamofire */; };
-		5E8479E42D4EA3E200D22C95 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 5E8479E32D4EA3E200D22C95 /* SnapshotTesting */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,7 +101,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E8479E42D4EA3E200D22C95 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +204,6 @@
 			);
 			name = ApodChallengeUITests;
 			packageProductDependencies = (
-				5E8479E32D4EA3E200D22C95 /* SnapshotTesting */,
 			);
 			productName = ApodChallengeUITests;
 			productReference = 5E84799C2D4D1AF100D22C95 /* ApodChallengeUITests.xctest */;
@@ -247,7 +244,6 @@
 			packageReferences = (
 				5E8479CD2D4D1F7100D22C95 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				5E8479D52D4D268100D22C95 /* XCRemoteSwiftPackageReference "Alamofire" */,
-				5E8479E22D4EA3E200D22C95 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5E8479822D4D1AEF00D22C95 /* Products */;
@@ -665,14 +661,6 @@
 				minimumVersion = 5.10.2;
 			};
 		};
-		5E8479E22D4EA3E200D22C95 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.18.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -685,11 +673,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E8479D52D4D268100D22C95 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		5E8479E32D4EA3E200D22C95 /* SnapshotTesting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5E8479E22D4EA3E200D22C95 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
-			productName = SnapshotTesting;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
